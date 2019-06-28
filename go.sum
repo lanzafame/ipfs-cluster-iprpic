@@ -212,6 +212,8 @@ github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORN
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0 h1:45sCR5RtlFHMR4UwH9sdQ5TC8v0qDQCHnXt+kaKSTVE=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
+github.com/lanzafame/bobblehat v0.0.0-20190628174408-a0f0792c1691 h1:o3aMwSNYkdM+w3zODsAQTGsP09c4r9E2DW42NjYRS0M=
+github.com/lanzafame/bobblehat v0.0.0-20190628174408-a0f0792c1691/go.mod h1:CuWZprWAvuwcm4Sl0Vt1qL8foyta9HIBRLC5qyYtUW4=
 github.com/lanzafame/go-libp2p-ocgorpc v0.0.1 h1:+9usVKvBE4YZmkAFUS9q6jpBmPv8712h0Mbx2G5zCAM=
 github.com/lanzafame/go-libp2p-ocgorpc v0.0.1/go.mod h1:xDXWom4d9+SKnw3282A7r/GVuOrz8H505VdSt/4dpLg=
 github.com/libp2p/go-addr-util v0.0.1 h1:TpTQm9cXVRVSKsYbgQ7GKc3KbbHVTnbostgGaDEP+88=
