@@ -32,7 +32,10 @@ func drawRect(fb *screen.FrameBuffer, r image.Rectangle, c color.Pixel565) {
 func drawColumnWave(fb *screen.FrameBuffer, r image.Rectangle, c color.Pixel565, speed time.Duration, dir Direction) {
 	switch dir {
 	case Up:
-		for y := r.Max.Y; y > r.Min.Y; y-- {
+		if r.Min.X == 5 {
+			return
+		}
+		for y := r.Max.Y; y >= r.Min.Y; y-- {
 			fb.SetPixel(r.Min.X, y, c)
 			screen.Draw(fb)
 			time.Sleep(speed)
@@ -41,19 +44,46 @@ func drawColumnWave(fb *screen.FrameBuffer, r image.Rectangle, c color.Pixel565,
 				screen.Draw(fb)
 			}
 		}
-		fb.SetPixel(r.Min.X, r.Min.Y+1, color.Black)
+		fb.SetPixel(r.Min.X, r.Min.Y, color.Black)
 		screen.Draw(fb)
-	case Down:
-		for y := r.Min.Y + 1; y <= r.Max.Y; y++ {
-			fb.SetPixel(r.Min.X, y, c)
+		time.Sleep(speed)
+		for y := r.Min.Y; y <= r.Max.Y; y++ {
+			fb.SetPixel(r.Min.X+1, y, c)
 			screen.Draw(fb)
 			time.Sleep(speed)
 			if y > r.Min.Y {
-				fb.SetPixel(r.Min.X, y-1, color.Black)
+				fb.SetPixel(r.Min.X+1, y-1, color.Black)
 				screen.Draw(fb)
 			}
 		}
-		fb.SetPixel(r.Min.X, r.Max.Y, color.Black)
+		fb.SetPixel(r.Min.X+1, r.Max.Y, color.Black)
+		screen.Draw(fb)
+	case Down:
+		if r.Min.X == 0 {
+			return
+		}
+		for y := r.Max.Y; y >= r.Min.Y; y-- {
+			fb.SetPixel(r.Min.X, y, c)
+			screen.Draw(fb)
+			time.Sleep(speed)
+			if y < r.Max.Y {
+				fb.SetPixel(r.Min.X, y+1, color.Black)
+				screen.Draw(fb)
+			}
+		}
+		fb.SetPixel(r.Min.X, r.Min.Y, color.Black)
+		screen.Draw(fb)
+		time.Sleep(speed)
+		for y := r.Min.Y; y <= r.Min.Y+1; y++ {
+			fb.SetPixel(r.Min.X-1, y, c)
+			screen.Draw(fb)
+			time.Sleep(speed)
+			if y > r.Min.Y {
+				fb.SetPixel(r.Min.X-1, y-1, color.Black)
+				screen.Draw(fb)
+			}
+		}
+		fb.SetPixel(r.Min.X-1, r.Min.Y+1, color.Black)
 		screen.Draw(fb)
 	}
 }

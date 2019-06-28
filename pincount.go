@@ -21,14 +21,20 @@ const (
 	unpin
 )
 
+// Pin Colours
+var (
+	PinBlue  = color.New(6, 28, 199)
+	PinGreen = color.New(111, 245, 66)
+)
+
 // DefaultSegments provides a default set of segments.
 var DefaultSegments = []*Segment{
-	{Bucket: 3125, Rectangle: image.Rect(5, 1, 5, 5), Color: color.RandomPlan9PaletteColor()},
-	{Bucket: 625, Rectangle: image.Rect(4, 1, 4, 5), Color: color.RandomPlan9PaletteColor()},
-	{Bucket: 125, Rectangle: image.Rect(3, 1, 3, 5), Color: color.RandomPlan9PaletteColor()},
-	{Bucket: 25, Rectangle: image.Rect(2, 1, 2, 5), Color: color.RandomPlan9PaletteColor()},
-	{Bucket: 5, Rectangle: image.Rect(1, 1, 1, 5), Color: color.RandomPlan9PaletteColor()},
-	{Bucket: 1, Rectangle: image.Rect(0, 1, 0, 5), Color: color.RandomPlan9PaletteColor()},
+	{Bucket: 3125, Rectangle: image.Rect(5, 0, 5, 5), Color: PinBlue},
+	{Bucket: 625, Rectangle: image.Rect(4, 0, 4, 5), Color: PinBlue},
+	{Bucket: 125, Rectangle: image.Rect(3, 0, 3, 5), Color: PinBlue},
+	{Bucket: 25, Rectangle: image.Rect(2, 0, 2, 5), Color: PinBlue},
+	{Bucket: 5, Rectangle: image.Rect(1, 0, 1, 5), Color: PinBlue},
+	{Bucket: 1, Rectangle: image.Rect(0, 0, 0, 5), Color: PinBlue},
 }
 
 // Counter represents the section of the display
@@ -122,11 +128,12 @@ func (c *Counter) pins(ctx context.Context, pinsCh chan pinEvent) {
 // Segment represents a column segment of the counter.
 type Segment struct {
 	mu   sync.RWMutex
-	v    int
+	v    int // value
 	oldv int
 
 	Bucket int
 	image.Rectangle
+	AnimationRect image.Rectangle
 
 	Color color.Pixel565
 }
@@ -159,12 +166,14 @@ func (c *Counter) drawCounter(ctx context.Context, fb *screen.FrameBuffer, event
 		// consolidates into the next column
 		// v == 0 => no remainders to modulo operation
 		// s.v != s.oldv => previous value wasn't also 0
-		if s.v == 0 && s.v < s.oldv {
-			switch event {
-			case pin:
-				drawColumnWave(fb, s.Rectangle, color.White, 30*time.Millisecond, Up)
-			case unpin:
-				drawColumnWave(fb, s.Rectangle, color.White, 30*time.Millisecond, Down)
+		switch event {
+		case pin:
+			if s.v == 0 && s.v < s.oldv {
+				drawColumnWave(fb, s.Rectangle, PinGreen, 30*time.Millisecond, Up)
+			}
+		case unpin:
+			if (s.v == 0 || s.v == 1 || s.v == 2 || s.v == 3) && s.v < s.oldv {
+				drawColumnWave(fb, s.Rectangle, color.Red, 30*time.Millisecond, Down)
 			}
 		}
 		c.drawColumn(ctx, fb, s)
@@ -177,8 +186,8 @@ func (c *Counter) drawEvent(ctx context.Context, fb *screen.FrameBuffer, event p
 	switch event {
 	case pin:
 		for x := rect.Min.X; x <= rect.Max.X; x++ {
-			fb.SetPixel(x, rect.Min.Y, color.Blue)
-			fb.SetPixel(x, rect.Max.Y, color.Blue)
+			fb.SetPixel(x, rect.Min.Y, PinGreen)
+			fb.SetPixel(x, rect.Max.Y, PinGreen)
 			screen.Draw(fb)
 			time.Sleep(20 * time.Millisecond)
 			fb.SetPixel(x, rect.Min.Y, color.Black)
