@@ -30,7 +30,7 @@ type Statuses struct {
 // NewStatuses constructs a Statuses type with a Cluster
 // client.
 func NewStatuses(fb *screen.FrameBuffer, self peer.ID, c client.Client) *Statuses {
-	ps := make([]*Peer, 0, 16)
+	ps := make([]*Peer, 0, 10)
 	return &Statuses{fb: fb, Self: self, Peers: ps, client: c}
 }
 
@@ -46,13 +46,16 @@ func (s *Statuses) AddNewPeer(pid peer.ID) bool {
 	s.mu.RUnlock()
 
 	p := &Peer{ID: pid}
-	p.Color = color.RandomPlan9PaletteColor()
+	// p.Color = color.RandomPlan9PaletteColor()
+	p.Color = color.Magenta
 
 	s.mu.RLock()
 	numPeers := len(s.Peers)
-	maxPeers := cap(s.Peers)
+	maxPeers := 5
 	s.mu.RUnlock()
-	p.Point = image.Point{X: numPeers % maxPeers, Y: numPeers / maxPeers}
+	x := (numPeers / maxPeers) + 6
+	y := (numPeers % maxPeers) + 1
+	p.Point = image.Point{X: x, Y: y}
 
 	s.mu.Lock()
 	s.Peers = append(s.Peers, p)
